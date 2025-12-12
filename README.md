@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -14,3 +15,27 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+=======
+# CineMate - Movie Database
+
+A React-based movie database app built with Vite and Tailwind CSS. Users can search for movies, save to a watchlist, and get mood-based recommendations.
+
+## Features (Planned)
+- Search movies via OMDb API
+- Personal watchlist
+- Mood-based recommendations
+- Responsive design
+
+## Setup
+1. Clone the repo.
+2. Run `npm install`.
+3. Get an OMDb API key from [omdbapi.com](https://www.omdbapi.com/).
+4. Add your key to `src/App.jsx`.
+5. Run `npm run dev` to start the dev server.
+
+## Tech Stack
+- React
+- Vite
+- Tailwind CSS
+- OMDb API
+>>>>>>> bbdd1ab9f6cdc51ba181c224632f6b7c40401f0d
