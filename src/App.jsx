@@ -74,8 +74,9 @@ function App() {
 
       try {
         const apiKey = import.meta.env.VITE_OMDB_API_KEY
+        const encodedQuery = encodeURIComponent(searchQuery)
         const response = await fetch(
-          `https://www.omdbapi.com/?apikey=${apiKey}&s=${searchQuery}&type=movie`
+          `https://www.omdbapi.com/?apikey=${apiKey}&s=${encodedQuery}&type=movie`
         )
         const data = await response.json()
 
@@ -93,39 +94,26 @@ function App() {
       }
     }
 
-    const timer = setTimeout(() => {
-      fetchMovies()
-    }, 500)
+    // Only search if query is not empty
+    if (searchQuery.trim()) {
+      const timer = setTimeout(() => {
+        fetchMovies()
+      }, 500)
 
-    return () => clearTimeout(timer)
+      return () => clearTimeout(timer)
+    } else {
+      // Clear movies if search is empty
+      setMovies([])
+    }
   }, [searchQuery])
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-  }
 
   return (
     <WatchlistProvider>
       <Router>
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
-          {/* Test Div - Remove after confirming Tailwind works */}
-          <div className="p-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl text-white m-4">
-            <h1 className="text-3xl font-bold">🎬 TAILWIND TEST - If you see this with colors, Tailwind works!</h1>
-            <p className="mt-2 text-xl">Purple/pink gradient = Tailwind is working</p>
-            <div className="mt-4 flex gap-4">
-              <button className="px-6 py-3 bg-amber-500 hover:bg-amber-600 rounded-xl font-bold text-black">
-                Amber Button
-              </button>
-              <button className="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-xl font-bold">
-                Gray Button
-              </button>
-            </div>
-          </div>
-
           <Header 
             searchQuery={searchQuery} 
             setSearchQuery={setSearchQuery}
-            handleSearch={handleSearch}
           />
           
           <Routes>
@@ -141,7 +129,9 @@ function App() {
                     <p className="text-gray-300 text-xl mb-10 max-w-2xl mx-auto">
                       Search for any movie, save to your watchlist, and get personalized recommendations.
                     </p>
-                    <div className="max-w-md mx-auto">
+                    
+                    {/* Search Input */}
+                    <div className="max-w-md mx-auto mb-12">
                       <input
                         type="text"
                         placeholder="Try 'The Godfather', 'Interstellar', or 'Parasite'..."
@@ -149,6 +139,33 @@ function App() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full px-6 py-4 bg-gray-800 border-2 border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 text-lg"
                       />
+                    </div>
+
+                    {/* Mood-Based Suggestions */}
+                    <div className="mt-12">
+                      <h3 className="text-2xl font-bold text-white mb-6">
+                        Not sure what to watch? Pick a mood:
+                      </h3>
+                      <div className="flex flex-wrap justify-center gap-4">
+                        {[
+                          { emoji: '😊', mood: 'happy', search: 'comedy' },
+                          { emoji: '😢', mood: 'sad', search: 'drama emotional' },
+                          { emoji: '🧗', mood: 'adventurous', search: 'adventure action' },
+                          { emoji: '🤔', mood: 'thought-provoking', search: 'sci-fi mystery' }
+                        ].map(({ emoji, mood, search }) => (
+                          <button
+                            key={mood}
+                            onClick={() => setSearchQuery(search)}
+                            className="group px-6 py-4 bg-gray-800 hover:bg-gray-700 rounded-xl transition-all duration-300 hover:scale-105 min-w-[180px]"
+                          >
+                            <div className="text-3xl mb-2">{emoji}</div>
+                            <div className="text-white font-medium capitalize">{mood}</div>
+                            <div className="text-gray-400 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              Click to explore
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -158,6 +175,7 @@ function App() {
                   {loading && (
                     <div className="flex justify-center items-center py-20">
                       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
+                      <span className="ml-4 text-white">Searching for "{searchQuery}"...</span>
                     </div>
                   )}
 

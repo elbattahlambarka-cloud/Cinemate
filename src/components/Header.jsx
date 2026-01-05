@@ -1,27 +1,39 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-const Header = ({ searchQuery, setSearchQuery, handleSearch }) => {
+const Header = ({ searchQuery, setSearchQuery }) => {
+  const navigate = useNavigate()
+
+  const handleHomeClick = () => {
+    // Clear the search query
+    setSearchQuery('')
+    // If already on home page, this will refresh the hero section
+    // If on another page, navigate to home
+    if (window.location.pathname !== '/') {
+      navigate('/')
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-gray-900/95 backdrop-blur border-b border-gray-800 px-4 py-4">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Logo and Navigation */}
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer" onClick={handleHomeClick}>
               <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
                 <span className="text-black font-bold text-xl">C</span>
               </div>
               <h1 className="text-2xl font-bold text-white">CineMate</h1>
-            </Link>
+            </div>
             
             <nav className="flex gap-6">
-              <Link 
-                to="/" 
+              <button 
+                onClick={handleHomeClick}
                 className="text-gray-300 hover:text-amber-500 transition-colors font-medium"
               >
                 Home
-              </Link>
+              </button>
               <Link 
                 to="/watchlist" 
                 className="text-gray-300 hover:text-amber-500 transition-colors font-medium"
@@ -32,7 +44,7 @@ const Header = ({ searchQuery, setSearchQuery, handleSearch }) => {
           </div>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearch} className="w-full md:w-auto">
+          <div className="w-full md:w-auto">
             <div className="relative">
               <input
                 type="text"
@@ -56,14 +68,8 @@ const Header = ({ searchQuery, setSearchQuery, handleSearch }) => {
                   />
                 </svg>
               </div>
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-black font-semibold rounded-xl transition-colors"
-              >
-                Search
-              </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </header>
